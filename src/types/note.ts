@@ -1,0 +1,12 @@
+export interface Note {
+  id: string
+  title: string
+  content: string
+  createdAt: string
+  updatedAt: string
+  tag: string
+}
+
+export type CreateNote = Omit<Note, "id" | "createdAt" | "updatedAt">
+
+export type NoteTag = "Todo" | "Work" | "Personal" | "Meeting" | "Shopping"

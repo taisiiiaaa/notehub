@@ -1,0 +1,16 @@
+.loader {
+  display: flex;
+  justify-content: center;
+}
+
+.page {
+  min-height: 200px;
+  align-items: center;
+}
+
+.fetching {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
