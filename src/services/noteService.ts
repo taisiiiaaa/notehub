@@ -8,7 +8,7 @@ interface Response {
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  headers: { Authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}` },
+  headers: { Authorization: `Bearer ${import.meta.env.VITE_NOTEHUB_TOKEN}` },
 })
 
 export const fetchNotes = async (

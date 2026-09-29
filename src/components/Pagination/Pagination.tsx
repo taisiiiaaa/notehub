@@ -1,48 +1,49 @@
-import Pagination from "@mui/material/Pagination"
+import type { ComponentType } from "react"
+import ReactPaginateModule from "react-paginate"
+import type { ReactPaginateProps } from "react-paginate"
+import styles from "./Pagination.module.css"
 
-interface PaginationElementProps {
+type ModuleWithDefault<T> = { default: T }
+
+const ReactPaginate = (
+  ReactPaginateModule as unknown as ModuleWithDefault<
+    ComponentType<ReactPaginateProps>
+  >
+).default
+
+interface PaginationProps {
   totalPages: number
   currentPage: number
   updatePage: (page: number) => void
 }
 
-const PaginationElement = ({
+const Pagination = ({
   totalPages,
   currentPage,
   updatePage,
-}: PaginationElementProps) => {
+}: PaginationProps) => {
   return (
-    <Pagination
-      count={totalPages}
-      page={currentPage}
-      onChange={(_, page) => updatePage(page)}
-      size="medium"
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        "& .MuiPaginationItem-root": {
-          color: "rgba(128, 128, 128, 0.95)",
-          borderRadius: "10%",
-          transition: "background-color 250ms ease, color 250ms ease",
-        },
-        "& .MuiPaginationItem-root:hover, & .MuiPaginationItem-root:focus": {
-          color: "#000",
-          backgroundColor: "rgba(128, 128, 128, 0.25)",
-        },
-        "& .MuiPaginationItem-root.Mui-selected": {
-          color: "#fff",
-          backgroundColor: "#0d6efd",
-          transition: "background-color 250ms ease, color 250ms ease",
-        },
-        "& .MuiPaginationItem-root.Mui-selected:hover, .MuiPaginationItem-root.Mui-selected:focus":
-          { backgroundColor: "#0b5ed7" },
-        "& .MuiPaginationItem-root.Mui-disabled": {
-          color: "var(--color-text-muted)",
-          opacity: 0.5,
-        },
+    <ReactPaginate
+      pageCount={totalPages}
+      onPageChange={({ selected }) => {
+        updatePage(selected + 1)
       }}
+      forcePage={currentPage - 1}
+      pageRangeDisplayed={3}
+      marginPagesDisplayed={1}
+      previousLabel="<"
+      nextLabel=">"
+      breakLabel="..."
+      containerClassName={styles.pagination}
+      pageClassName={styles.page}
+      pageLinkClassName={styles.pageLink}
+      activeClassName={styles.active}
+      previousClassName={styles.previous}
+      nextClassName={styles.next}
+      disabledClassName={styles.disabled}
+      breakClassName={styles.break}
     />
   )
 }
 
-export default PaginationElement
+export default Pagination
