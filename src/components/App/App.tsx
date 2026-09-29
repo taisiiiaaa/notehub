@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { createNote, deleteNote, fetchNotes } from "../../services/noteService"
-import Pagination from "../PaginationElement/PaginationElement"
+import Pagination from "../Pagination/Pagination"
 import SearchBox from "../SearchBox/SearchBox"
 import styles from "./App.module.css"
 import {
