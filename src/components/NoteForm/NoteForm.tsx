@@ -2,11 +2,12 @@ import type { CreateNote } from "../../types/note"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import styles from "./NoteForm.module.css"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import toast from "react-hot-toast"
+import { createNote } from "../../services/noteService"
 
 interface NoteFormProps {
   onClose: () => void
-  onSubmit: (note: CreateNote) => void
-  isSubmitting?: boolean
 }
 
 const validationSchema = Yup.object({
@@ -24,16 +25,29 @@ const validationSchema = Yup.object({
 
 const initialValues: CreateNote = { title: "", content: "", tag: "Todo" }
 
-const NoteForm = ({
-  onClose,
-  onSubmit,
-  isSubmitting = false,
-}: NoteFormProps) => {
+const NoteForm = ({ onClose }: NoteFormProps) => {
+  const queryClient = useQueryClient()
+
+  const createNoteMutation = useMutation({
+    mutationFn: createNote,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notes"] })
+
+      onClose()
+      toast.success("Note created successfully!")
+    },
+
+    onError: () => {
+      toast.error("Failed to create note.")
+    },
+  })
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={onSubmit}>
+      onSubmit={(note: CreateNote) => createNoteMutation.mutate(note)}>
       <Form className={styles.form}>
         <div className={styles.formGroup}>
           <label htmlFor="title">Title</label>
@@ -90,8 +104,8 @@ const NoteForm = ({
           <button
             type="submit"
             className={styles.submitButton}
-            disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create note"}
+            disabled={createNoteMutation.isPending}>
+            {createNoteMutation.isPending ? "Creating..." : "Create note"}
           </button>
         </div>
       </Form>
